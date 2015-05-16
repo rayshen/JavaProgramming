@@ -7,12 +7,42 @@
 //
 
 #import "AppDelegate.h"
-
+#import "MFSideMenuContainerViewController.h"
+#import "LoginViewController.h"
 @implementation AppDelegate
+
+@synthesize window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     // Override point for customization after application launch.
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"Didlogin"]){
+        NSLog(@"未进行过登录，进行登录");
+        LoginViewController *LoginViewController =[storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        
+        self.window.rootViewController = LoginViewController;
+    }
+    else
+    {
+        NSLog(@"已经进行过登录，直接到首页");
+        
+        MFSideMenuContainerViewController *container =[storyboard instantiateViewControllerWithIdentifier:@"MFSideMenuContainerViewController"];
+        
+        UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"indexNavViewController"];
+        
+        UIViewController *leftSideMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"leftSideMenuViewController"];
+        
+        [container setLeftMenuViewController:leftSideMenuViewController];
+        
+        [container setCenterViewController:navigationController];
+        
+        self.window.rootViewController = container;
+        
+    }
+    
     return YES;
 }
 							
